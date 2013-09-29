@@ -1,0 +1,6 @@
+build.*
+bin.*
+lib.*
+prj.third/libtiff/tif_config.h
+prj.third/libtiff/tiffconf.h
+prj.third/log4cplus/include/log4cplus/config/defines.hxx
