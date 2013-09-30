@@ -82,8 +82,7 @@ int main( int argc, const char** argv )
     int hsize = 16;
     float hranges[] = {0,180};
     const float* phranges = hranges;
-    CommandLineParser parser(argc, argv, keys);
-    std::string movie_path = parser.get<std::string>("");     
+	std::string movie_path = argc == 1 ? "" : argv[1];     
     
     if (movie_path.empty())
         cap.open(0);
