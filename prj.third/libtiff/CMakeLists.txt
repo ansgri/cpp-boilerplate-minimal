@@ -7,7 +7,7 @@ project(libtiff)
 # Options
 option(WITH_TIFF_LZW          "Support TIFF LZW format" ON)
 option(WITH_TIFF_ZIP          "Support TIFF ZIP format" OFF)
-option(WITH_TIFF_JPEG          "Support TIFF JPEG format" OFF)
+option(WITH_TIFF_JPEG         "Support TIFF JPEG format" OFF)
 
 if(WITH_TIFF_LZW)
   set(LZW_SUPPORT 1)
@@ -45,10 +45,10 @@ check_type_size(int SIZEOF_INT)
 check_type_size(long SIZEOF_LONG)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tif_config.h.cmakein
-               ${CMAKE_CURRENT_SOURCE_DIR}/tif_config.h @ONLY)
+               ${CMAKE_CURRENT_BINARY_DIR}/tif_config.h @ONLY)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tiffconf.h.cmakein
-               ${CMAKE_CURRENT_SOURCE_DIR}/tiffconf.h @ONLY)
+               ${CMAKE_CURRENT_BINARY_DIR}/tiffconf.h @ONLY)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
@@ -56,7 +56,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 # The .cpp files:
 
 set(lib_srcs
-	t4.h
+  t4.h
     tiffio.hxx
     tiffiop.h
     tif_aux.c
@@ -102,13 +102,13 @@ set(lib_srcs
     uvcode.h
     )
 
-if(UNIX OR TOOLCHAIN_UNIX OR ANDROID)
+if(UNIX OR TOOLCHAIN_UNIX OR ANDROID OR WINPHONE)
     set(lib_srcs ${lib_srcs} tif_unix.c)
 endif()
 
-if(WIN32)
+if(WIN32 AND NOT WINPHONE)
     set(lib_srcs ${lib_srcs} tif_win32.c)
-endif(WIN32)
+endif(WIN32 AND NOT WINPHONE)
 
 #if(APPLE)
 #    set(lib_srcs ${lib_srcs} tif_apple.c)
@@ -127,6 +127,11 @@ endif()
 if(UNIX)
     if(CMAKE_COMPILER_IS_GNUCXX OR CV_ICC)
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-pointer-to-int-cast")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-implicit-function-declaration")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-sign-compare")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-int-to-pointer-cast")
     endif()
 endif()
 
@@ -140,3 +145,10 @@ IF (WITH_TIFF_JPEG)
   TARGET_LINK_LIBRARIES(${the_target} jpeg)
 ENDIF()
 
+
+IF (libtiff_INSTALL_CUSTOM)
+  INSTALL(
+    TARGETS ${the_target}
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib)
+ENDIF()

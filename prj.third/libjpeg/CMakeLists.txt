@@ -26,6 +26,7 @@ endif()
 if(UNIX)
      if(CMAKE_COMPILER_IS_GNUCXX OR CV_ICC)
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-main -Wno-unused-parameter")
      endif()
 endif()
 
@@ -34,3 +35,9 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 add_library(${the_target} STATIC ${lib_srcs} ${lib_hdrs})
+
+if (libjpeg_INSTALL_CUSTOM)
+  install (TARGETS ${the_target}
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib)
+endif()

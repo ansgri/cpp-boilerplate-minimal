@@ -1,6 +1,7 @@
 add_subdirectory(libjpeg)
 add_subdirectory(libtiff)
 add_subdirectory(libpng)
+add_subdirectory(libwebp)
 add_subdirectory(zlib)
 add_subdirectory(log4cplus)
 add_subdirectory(json-cpp)
